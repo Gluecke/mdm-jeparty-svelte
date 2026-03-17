@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import { db } from '$lib/firebase';
+	import { onAuthStateChanged } from 'firebase/auth';
+	import { db, auth } from '$lib/firebase';
 	import { guesses, subscribeGuesses } from '$lib/stores/guesses';
 	import { guessVisibility, subscribeVisibility } from '$lib/stores/visibility';
 	import { subscribeCountdown } from '$lib/stores/countdown';
@@ -29,20 +30,29 @@
 		}
 	}
 
-	onMount(async () => {
-		// Ensure guessVisibility doc exists
-		const visDocRef = doc(db, 'guessVisibility', '1');
-		const snap = await getDoc(visDocRef);
-		if (!snap.exists()) {
-			await setDoc(visDocRef, { show: false });
-		}
+	let unsubAuth: (() => void) | undefined;
 
-		unsubGuesses = subscribeGuesses();
-		unsubVisibility = subscribeVisibility();
-		unsubCountdown = subscribeCountdown();
+	onMount(() => {
+		unsubAuth = onAuthStateChanged(auth, async (user) => {
+			if (!user) return;
+
+			// Ensure guessVisibility doc exists
+			const visDocRef = doc(db, 'guessVisibility', '1');
+			const snap = await getDoc(visDocRef);
+			if (!snap.exists()) {
+				await setDoc(visDocRef, { show: false });
+			}
+
+			unsubGuesses = subscribeGuesses();
+			unsubVisibility = subscribeVisibility();
+			unsubCountdown = subscribeCountdown();
+
+			unsubAuth?.();
+		});
 	});
 
 	onDestroy(() => {
+		unsubAuth?.();
 		unsubGuesses?.();
 		unsubVisibility?.();
 		unsubCountdown?.();
