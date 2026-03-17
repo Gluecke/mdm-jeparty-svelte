@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator, signInAnonymously } from 'firebase/auth';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,6 +21,14 @@ export let auth = null as unknown as ReturnType<typeof getAuth>;
 
 if (browser) {
 	const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+	if (import.meta.env.VITE_USE_EMULATOR !== 'true') {
+		initializeAppCheck(app, {
+			provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+			isTokenAutoRefreshEnabled: true
+		});
+	}
+
 	db = getFirestore(app);
 	auth = getAuth(app);
 
