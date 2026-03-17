@@ -77,11 +77,44 @@ npm run preview
 
 ## Deploying
 
+### Automatic deployment via GitHub Actions
+
+Deployments are handled automatically by the GitHub Actions workflow at `.github/workflows/main.yml`. To trigger a deployment:
+
+1. Go to the repository on GitHub
+2. Click **Releases** → **Draft a new release**
+3. Create a new tag (e.g. `v1.0.1`), add a title, and click **Publish release**
+
+The workflow will:
+- Install dependencies
+- Build the app with Firebase config injected from GitHub Secrets
+- Deploy hosting and Firestore rules to Firebase
+
+You can monitor the deployment progress under the **Actions** tab on GitHub.
+
+### Required GitHub Secrets
+
+The following secrets must be set in the repository (Settings → Secrets and variables → Actions):
+
+| Secret | Description |
+|--------|-------------|
+| `VITE_FIREBASE_API_KEY` | Firebase API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+| `VITE_FIREBASE_MEASUREMENT_ID` | Firebase measurement ID |
+| `VITE_RECAPTCHA_SITE_KEY` | reCAPTCHA v3 site key (for App Check) |
+| `FIREBASE_TOKEN` | Firebase CI token from `firebase login:ci` |
+
+### Manual deployment
+
 ```sh
-firebase deploy --only hosting
+firebase deploy --only hosting,firestore:rules
 ```
 
-Make sure `.env` has real Firebase config values (not placeholders) before deploying.
+Make sure `.env` has real Firebase config values (not placeholders) before deploying manually.
 
 ## Firebase project management
 
