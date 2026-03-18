@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte';
 	import { UserRound, MessageCircleQuestionMark, Send, CircleCheck } from 'lucide-svelte';
 
-	let { onSubmit }: { onSubmit?: (name: string) => void } = $props();
+	let { onNameSet }: { onNameSet?: (name: string) => void } = $props();
 
 	let name = $state('');
 	let guess = $state('');
@@ -43,7 +43,7 @@
 		try {
 			submitted = true;
 			setTimeout(() => (submitted = false), 2000);
-			onSubmit?.(name.trim());
+			onNameSet?.(name.trim());
 			await setDoc(doc(db, 'guesses', name.trim()), guessData);
 			localStorage.setItem('contestant', JSON.stringify({ name: name.trim() }));
 		} catch (error) {

@@ -80,7 +80,7 @@
 		<!-- Left column -->
 		<div class="w-1/2 flex flex-col gap-6">
 			<HostControls />
-			<ContestantForm onSubmit={(n) => (currentName = n)} />
+			<ContestantForm onNameSet={(n) => (currentName = n)} />
 			<Timer />
 		</div>
 
