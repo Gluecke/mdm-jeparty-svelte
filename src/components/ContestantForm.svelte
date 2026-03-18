@@ -41,10 +41,10 @@
 		};
 
 		try {
-			submitted = true;
 			setTimeout(() => (submitted = false), 2000);
 			onNameSet?.(name.trim());
 			await setDoc(doc(db, 'guesses', name.trim()), guessData);
+			submitted = true;
 			localStorage.setItem('contestant', JSON.stringify({ name: name.trim() }));
 		} catch (error) {
 			console.error('Error submitting guess:', error);

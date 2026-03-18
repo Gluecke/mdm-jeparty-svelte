@@ -3,7 +3,6 @@
 		collection,
 		deleteDoc,
 		doc,
-		getDoc,
 		getDocs,
 		updateDoc
 	} from 'firebase/firestore';
@@ -12,11 +11,8 @@
 	import { Eye, EyeOff, RefreshCw } from 'lucide-svelte';
 
 	async function toggleVisibility() {
+		const toShow = !$guessVisibility;
 		const visDocRef = doc(db, 'guessVisibility', '1');
-		const snap = await getDoc(visDocRef);
-		if (!snap.exists()) return;
-
-		const toShow = !snap.data().show;
 		await updateDoc(visDocRef, { show: toShow });
 
 		const guessesSnap = await getDocs(collection(db, 'guesses'));
