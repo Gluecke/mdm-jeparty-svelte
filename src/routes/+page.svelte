@@ -31,6 +31,7 @@
 	}
 
 	let unsubAuth: (() => void) | undefined;
+	let loading = $state(true);
 
 	onMount(() => {
 		unsubAuth = onAuthStateChanged(auth, async (user) => {
@@ -47,6 +48,7 @@
 			unsubVisibility = subscribeVisibility();
 			unsubCountdown = subscribeCountdown();
 
+			loading = false;
 			unsubAuth?.();
 		});
 	});
@@ -77,32 +79,41 @@
 	<Splash />
 
 	<main class="flex flex-1 gap-6 p-6">
-		<!-- Left column -->
-		<div class="w-1/2 flex flex-col gap-6">
-			<HostControls />
-			<ContestantForm onNameSet={(n) => (currentName = n)} />
-			<Timer />
-		</div>
+		{#if loading}
+			<div class="flex flex-1 items-center justify-center">
+				<div class="flex flex-col items-center gap-3 text-gray-500">
+					<div class="w-10 h-10 border-4 border-gray-300 border-t-purple-600 rounded-full animate-spin"></div>
+					<span class="text-sm">Connecting...</span>
+				</div>
+			</div>
+		{:else}
+			<!-- Left column -->
+			<div class="w-1/2 flex flex-col gap-6">
+				<HostControls />
+				<ContestantForm onNameSet={(n) => (currentName = n)} />
+				<Timer />
+			</div>
 
-		<!-- Right column -->
-		<div class="w-1/2 flex flex-col gap-4">
-			<div class="text-center font-semibold text-gray-700">
-				Answers: {$guesses.length}
+			<!-- Right column -->
+			<div class="w-1/2 flex flex-col gap-4">
+				<div class="text-center font-semibold text-gray-700">
+					Answers: {$guesses.length}
+				</div>
+				<hr class="border-gray-300" />
+				<div class="flex flex-col gap-3 overflow-y-auto flex-1">
+					{#each $guesses as guess (guess.id)}
+						<GuessCard {guess} {currentName} />
+					{/each}
+				</div>
+				<button
+					onclick={downloadAnswers}
+					class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white rounded p-3 transition-colors w-full"
+					title="Download Answers"
+				>
+					<Download size={22} />
+				</button>
 			</div>
-			<hr class="border-gray-300" />
-			<div class="flex flex-col gap-3 overflow-y-auto flex-1">
-				{#each $guesses as guess (guess.id)}
-					<GuessCard {guess} {currentName} />
-				{/each}
-			</div>
-			<button
-				onclick={downloadAnswers}
-				class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white rounded p-3 transition-colors w-full"
-				title="Download Answers"
-			>
-				<Download size={22} />
-			</button>
-		</div>
+		{/if}
 	</main>
 
 	<Footer />
