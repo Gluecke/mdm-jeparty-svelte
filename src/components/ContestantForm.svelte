@@ -94,7 +94,7 @@
 		<button
 			type="submit"
 			disabled={!name.trim() || !guess.trim() || submitting}
-			class="bg-gray-800 hover:bg-gray-700 disabled:bg-gray-300 text-white rounded-full p-2 transition-colors"
+			class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-full p-2 shadow-md cursor-pointer transition-colors"
 			title="Submit answer"
 		>
 			{#if submitting}

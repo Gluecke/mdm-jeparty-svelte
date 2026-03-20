@@ -44,7 +44,7 @@
 	<button
 		onclick={toggleVisibility}
 		disabled={togglingVisibility}
-		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded transition-colors"
+		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded shadow-md cursor-pointer transition-colors"
 		title="Show/Hide answers"
 	>
 		{#if $guessVisibility}
@@ -56,7 +56,7 @@
 	<button
 		onclick={reset}
 		disabled={resetting}
-		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded transition-colors"
+		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded shadow-md cursor-pointer transition-colors"
 		title="Reset"
 	>
 		<RefreshCw size={20} class={resetting ? 'animate-spin' : ''} />

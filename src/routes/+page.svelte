@@ -111,7 +111,7 @@
 				</div>
 				<button
 					onclick={downloadAnswers}
-					class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white rounded p-3 transition-colors w-full"
+					class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white rounded p-3 shadow-md cursor-pointer transition-colors w-full"
 					title="Download Answers"
 				>
 					<Download size={22} />

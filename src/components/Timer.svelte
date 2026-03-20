@@ -56,7 +56,7 @@
 		</div>
 		<button
 			onclick={startCountdown}
-			class="bg-gray-800 hover:bg-gray-700 text-white rounded-full p-2 transition-colors"
+			class="bg-gray-800 hover:bg-gray-700 text-white rounded-full p-2 shadow-md cursor-pointer transition-colors"
 			title="Start timer"
 		>
 			<Timer size={20} />
