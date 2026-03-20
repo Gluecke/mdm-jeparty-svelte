@@ -100,7 +100,7 @@
 					Answers: {$guesses.length}
 				</div>
 				<hr class="border-gray-300" />
-				<div class="flex flex-col gap-3 overflow-y-auto flex-1">
+				<div class="flex flex-col gap-1 overflow-y-auto flex-1">
 					{#if $guesses.length === 0}
 						<p class="text-center text-gray-400 mt-6">No answers submitted yet.</p>
 					{:else}
