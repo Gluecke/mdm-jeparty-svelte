@@ -101,9 +101,13 @@
 				</div>
 				<hr class="border-gray-300" />
 				<div class="flex flex-col gap-3 overflow-y-auto flex-1">
-					{#each $guesses as guess (guess.id)}
-						<GuessCard {guess} {currentName} />
-					{/each}
+					{#if $guesses.length === 0}
+						<p class="text-center text-gray-400 mt-6">No answers submitted yet.</p>
+					{:else}
+						{#each $guesses as guess (guess.id)}
+							<GuessCard {guess} {currentName} />
+						{/each}
+					{/if}
 				</div>
 				<button
 					onclick={downloadAnswers}
