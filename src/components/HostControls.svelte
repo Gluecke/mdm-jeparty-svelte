@@ -10,19 +10,32 @@
 	import { guessVisibility } from '$lib/stores/visibility';
 	import { Eye, EyeOff, RefreshCw } from 'lucide-svelte';
 
-	async function toggleVisibility() {
-		const toShow = !$guessVisibility;
-		const visDocRef = doc(db, 'guessVisibility', '1');
-		await updateDoc(visDocRef, { show: toShow });
+	let togglingVisibility = $state(false);
+	let resetting = $state(false);
 
-		const guessesSnap = await getDocs(collection(db, 'guesses'));
-		await Promise.all(guessesSnap.docs.map((g) => updateDoc(doc(db, 'guesses', g.id), { showAnswer: toShow })));
+	async function toggleVisibility() {
+		togglingVisibility = true;
+		try {
+			const toShow = !$guessVisibility;
+			const visDocRef = doc(db, 'guessVisibility', '1');
+			await updateDoc(visDocRef, { show: toShow });
+
+			const guessesSnap = await getDocs(collection(db, 'guesses'));
+			await Promise.all(guessesSnap.docs.map((g) => updateDoc(doc(db, 'guesses', g.id), { showAnswer: toShow })));
+		} finally {
+			togglingVisibility = false;
+		}
 	}
 
 	async function reset() {
-		const guessesSnap = await getDocs(collection(db, 'guesses'));
-		await Promise.all(guessesSnap.docs.map((g) => deleteDoc(doc(db, 'guesses', g.id))));
-		await updateDoc(doc(db, 'guessVisibility', '1'), { show: false });
+		resetting = true;
+		try {
+			const guessesSnap = await getDocs(collection(db, 'guesses'));
+			await Promise.all(guessesSnap.docs.map((g) => deleteDoc(doc(db, 'guesses', g.id))));
+			await updateDoc(doc(db, 'guessVisibility', '1'), { show: false });
+		} finally {
+			resetting = false;
+		}
 	}
 </script>
 
@@ -30,7 +43,8 @@
 	<span class="text-sm font-medium text-gray-600">Host Controls:</span>
 	<button
 		onclick={toggleVisibility}
-		class="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors"
+		disabled={togglingVisibility}
+		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded transition-colors"
 		title="Show/Hide answers"
 	>
 		{#if $guessVisibility}
@@ -41,9 +55,10 @@
 	</button>
 	<button
 		onclick={reset}
-		class="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors"
+		disabled={resetting}
+		class="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white p-2 rounded transition-colors"
 		title="Reset"
 	>
-		<RefreshCw size={20} />
+		<RefreshCw size={20} class={resetting ? 'animate-spin' : ''} />
 	</button>
 </div>

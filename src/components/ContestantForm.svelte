@@ -12,6 +12,7 @@
 	let guess = $state('');
 	let guessInput: HTMLInputElement | undefined = $state();
 	let submitted = $state(false);
+	let submitting = $state(false);
 
 	// Load saved name from localStorage and auto-focus guess if name is pre-filled
 	if (typeof localStorage !== 'undefined') {
@@ -33,6 +34,7 @@
 
 	async function submit() {
 		if (!name.trim() || !guess.trim()) return;
+		submitting = true;
 
 		const guessData: Guess = {
 			contestant: { name: name.trim(), guess: guess.trim() },
@@ -41,13 +43,15 @@
 		};
 
 		try {
-			setTimeout(() => (submitted = false), 2000);
 			onNameSet?.(name.trim());
 			await setDoc(doc(db, 'guesses', name.trim()), guessData);
 			submitted = true;
+			setTimeout(() => (submitted = false), 2000);
 			localStorage.setItem('contestant', JSON.stringify({ name: name.trim() }));
 		} catch (error) {
 			console.error('Error submitting guess:', error);
+		} finally {
+			submitting = false;
 		}
 	}
 </script>
@@ -89,11 +93,15 @@
 		{/if}
 		<button
 			type="submit"
-			disabled={!name.trim() || !guess.trim()}
+			disabled={!name.trim() || !guess.trim() || submitting}
 			class="bg-gray-800 hover:bg-gray-700 disabled:bg-gray-300 text-white rounded-full p-2 transition-colors"
 			title="Submit answer"
 		>
-			<Send size={20} />
+			{#if submitting}
+				<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+			{:else}
+				<Send size={20} />
+			{/if}
 		</button>
 	</div>
 </form>
