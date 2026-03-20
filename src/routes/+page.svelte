@@ -78,7 +78,7 @@
 	<Header />
 	<Splash />
 
-	<main class="flex flex-1 gap-6 p-6">
+	<main class="flex flex-col md:flex-row flex-1 gap-6 p-6">
 		{#if loading}
 			<div class="flex flex-1 items-center justify-center">
 				<div class="flex flex-col items-center gap-3 text-gray-500">
@@ -88,14 +88,14 @@
 			</div>
 		{:else}
 			<!-- Left column -->
-			<div class="w-1/2 flex flex-col gap-6">
+			<div class="w-full md:w-1/2 flex flex-col gap-6">
 				<HostControls />
 				<ContestantForm onNameSet={(n) => (currentName = n)} />
 				<Timer />
 			</div>
 
 			<!-- Right column -->
-			<div class="w-1/2 flex flex-col gap-4">
+			<div class="w-full md:w-1/2 flex flex-col gap-4">
 				<div class="text-center font-semibold text-gray-700">
 					Answers: {$guesses.length}
 				</div>
