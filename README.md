@@ -2,8 +2,6 @@
 
 A real-time Jeopardy answer-submission app built with SvelteKit, Tailwind CSS, and Firebase Firestore. Contestants submit answers, a timer counts down, and the host reveals/resets answers — all synchronized in real time across clients.
 
-The original Angular version can be found at [Gluecke/mdm-jeparty](https://github.com/Gluecke/mdm-jeparty).
-
 ## Prerequisites
 
 - Node.js 18+
